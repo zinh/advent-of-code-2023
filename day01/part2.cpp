@@ -1,10 +1,11 @@
+#include <algorithm>
 #include <cctype>
 #include <fstream>
 #include <iostream>
-#include <regex>
-#include <array>
-#include <vector>
+#include <map>
 #include <tuple>
+#include <vector>
+#include <sstream>
 
 using namespace std;
 
@@ -26,18 +27,15 @@ void read_file(const string &filename) {
   ifstream is(filename);
   int total = 0;
   for (string line; getline(is, line);) {
-    cout << "Original data: " << line << endl;
-    int n = parse_line(replace_digit(line));
-    cout << n << endl;
-    total += n;
-    cout << "---" << endl;
+    // cout << "Original data: " << line << endl;
+    total += parse_line(replace_digit(line));
   }
   cout << total << endl;
 }
 
 int parse_line(string line) {
   vector<int> v;
-  cout << line << endl;
+  // cout << line << endl;
   for (char &c : line) {
     if (isdigit(c))
       v.push_back(c - '0');
@@ -45,40 +43,36 @@ int parse_line(string line) {
   return v.front() * 10 + v.back();
 }
 
-string replace_digit(string line) {
-  vector<tuple<string, string>> h = {
-      {"one", "1"},   {"two", "2"},   {"three", "3"},
-      {"four", "4"},  {"five", "5"},  {"six", "6"},
-      {"seven", "7"}, {"eight", "8"}, {"nine", "9"}};
-  int from_pos = 0;
-  bool found = false;
-  while (true) {
-    found = false;
-    vector<tuple<int, tuple<string, string>>> matched;
-    for (const auto &[key, value] : h) {
-      // cout << "Try search for " << key << endl;
-      int pos = line.find(key, from_pos);
-      if (pos == string::npos)
-        continue;
-      // cout << "Found occurence at " << pos << " for " << key << endl;
-      matched.push_back({pos, {key, value}});
-      found = true;
+bool cmp_fn(tuple<int, string> a, tuple<int, string> b) {
+  return get<0>(a) < get<0>(b);
+}
+
+string
+replace_digit(string line) {
+  vector<string> h = {"one",   "two",  "three", "four", "five", "six", "seven",
+                      "eight", "nine", "0",     "1",    "2",    "3",   "4",
+                      "5",     "6",    "7",     "8",    "9"};
+  map<string, string> m = {{"one", "1"},   {"two", "2"},   {"three", "3"},
+                           {"four", "4"},  {"five", "5"},  {"six", "6"},
+                           {"seven", "7"}, {"eight", "8"}, {"nine", "9"}};
+  vector<tuple<int, string>> results;
+  stringstream ss;
+  for (auto sub : h) {
+    size_t pos = line.find(sub, 0);
+    while (pos != string::npos) {
+      results.push_back({pos, sub});
+      pos = line.find(sub, pos + 1);
     }
-    if (!found)
-      break;
-    int smallest_pos = line.size();
-    tuple<string, string> smallest_occurence;
-    for (const auto &[pos, occurence] : matched) {
-      if (pos < smallest_pos) {
-        smallest_pos = pos;
-        smallest_occurence = occurence;
-      }
-    }
-    // cout << "Will replace " << get<0>(smallest_occurence) << " by " << get<1>(smallest_occurence) << " at " << smallest_pos << endl;
-    // cout << "Length = " << get<0>(smallest_occurence).size() << endl;
-    line.replace(smallest_pos, get<0>(smallest_occurence).size(), get<1>(smallest_occurence));
-    // cout << "After replace: " << line << endl;
-    from_pos = smallest_pos;
   }
-  return line;
+  sort(results.begin(), results.end(), cmp_fn);
+  for (auto item : results) {
+    string s = get<1>(item);
+    try {
+      auto value = m.at(s);
+      ss << value;
+    } catch(out_of_range err) {
+      ss << s;
+    }
+  }
+  return ss.str();
 }
