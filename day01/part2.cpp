@@ -54,19 +54,31 @@ string replace_digit(string line) {
   bool found = false;
   while (true) {
     found = false;
+    vector<tuple<int, tuple<string, string>>> matched;
     for (const auto &[key, value] : h) {
-      cout << "Try search for " << key << endl;
+      // cout << "Try search for " << key << endl;
       int pos = line.find(key, from_pos);
       if (pos == string::npos)
         continue;
-      cout << "Found occurence at " << pos << " for " << key << endl;
-      line.replace(pos, pos + key.size(), value);
-      from_pos = pos;
+      // cout << "Found occurence at " << pos << " for " << key << endl;
+      matched.push_back({pos, {key, value}});
       found = true;
-      break;
     }
     if (!found)
       break;
+    int smallest_pos = line.size();
+    tuple<string, string> smallest_occurence;
+    for (const auto &[pos, occurence] : matched) {
+      if (pos < smallest_pos) {
+        smallest_pos = pos;
+        smallest_occurence = occurence;
+      }
+    }
+    // cout << "Will replace " << get<0>(smallest_occurence) << " by " << get<1>(smallest_occurence) << " at " << smallest_pos << endl;
+    // cout << "Length = " << get<0>(smallest_occurence).size() << endl;
+    line.replace(smallest_pos, get<0>(smallest_occurence).size(), get<1>(smallest_occurence));
+    // cout << "After replace: " << line << endl;
+    from_pos = smallest_pos;
   }
   return line;
 }
