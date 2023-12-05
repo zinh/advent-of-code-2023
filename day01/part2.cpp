@@ -3,9 +3,9 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <sstream>
 #include <tuple>
 #include <vector>
-#include <sstream>
 
 using namespace std;
 
@@ -47,8 +47,7 @@ bool cmp_fn(tuple<int, string> a, tuple<int, string> b) {
   return get<0>(a) < get<0>(b);
 }
 
-string
-replace_digit(string line) {
+string replace_digit(string line) {
   vector<string> h = {"one",   "two",  "three", "four", "five", "six", "seven",
                       "eight", "nine", "0",     "1",    "2",    "3",   "4",
                       "5",     "6",    "7",     "8",    "9"};
@@ -70,7 +69,7 @@ replace_digit(string line) {
     try {
       auto value = m.at(s);
       ss << value;
-    } catch(out_of_range err) {
+    } catch (out_of_range err) {
       ss << s;
     }
   }
