@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/c++
-# Edit at https://www.toptal.com/developers/gitignore?templates=c++
+# Created by https://www.toptal.com/developers/gitignore/api/c++,haskell
+# Edit at https://www.toptal.com/developers/gitignore?templates=c++,haskell
 
 ### C++ ###
 # Prerequisites
@@ -35,8 +35,33 @@
 *.out
 *.app
 
-# End of https://www.toptal.com/developers/gitignore/api/c++
+### Haskell ###
+dist
+dist-*
+cabal-dev
+*.hi
+*.hie
+*.chi
+*.chs.h
+*.dyn_o
+*.dyn_hi
+.hpc
+.hsenv
+.cabal-sandbox/
+cabal.sandbox.config
+*.prof
+*.aux
+*.hp
+*.eventlog
+.stack-work/
+cabal.project.local
+cabal.project.local~
+.HTF/
+.ghc.environment.*
+
+# End of https://www.toptal.com/developers/gitignore/api/c++,haskell
+*.input
 build
 .cache
-*.input
 abseil-cpp
+boost
