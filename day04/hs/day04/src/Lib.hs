@@ -1,6 +1,7 @@
 module Lib
     ( parseFile,
-      parseLine
+      parseLine,
+      Card (..)
     ) where
 
 import qualified Data.Set as S
