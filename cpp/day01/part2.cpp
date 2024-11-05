@@ -1,5 +1,3 @@
-#include <algorithm>
-#include <cctype>
 #include <fstream>
 #include <iostream>
 #include <map>
@@ -28,7 +26,9 @@ void read_file(const string &filename) {
   int total = 0;
   for (string line; getline(is, line);) {
     // cout << "Original data: " << line << endl;
-    total += parse_line(replace_digit(line));
+    auto digits = replace_digit(line);
+    // cout << line << ":" << digits << endl;
+    total += parse_line(digits);
   }
   cout << total << endl;
 }
