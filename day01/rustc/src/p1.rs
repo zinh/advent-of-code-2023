@@ -4,6 +4,10 @@ pub fn get_number(s: String) -> u32 {
         .filter(|&c| c >= '0' && c <= '9')
         .map(|c| c.to_digit(10).unwrap())
         .collect();
+    // for d in &digits {
+    //     print!("{}", d);
+    // }
+    // println!("");
     match digits.first() {
         Some(first) => match digits.last() {
             Some(last) => 10 * first + last,
